@@ -6,7 +6,7 @@ import unittest
 # search for the url in the University of Michgian wikipedia page (in the third pargraph of the intro)
 # HINT: You will have to add https://en.wikipedia.org to the URL retrieved using BeautifulSoup
 def getLink(soup):
-    tag = soup.find('a', class_="mw-redirect", text = "Olympic Games")
+    tag = soup.find('a', class_="mw-redirect", string = "Olympic Games")
     link = "https://en.wikipedia.org"
     link += tag.get('href')
     return link
@@ -14,8 +14,15 @@ def getLink(soup):
 # Task 3: Get the details from the box titled "College/school founding". Get all the college/school names and the year they were
 # founded and organize the same into key-value pairs.
 def getAdmissionsInfo2019(soup):
-
-    pass
+    tag = soup.find('table', class_="toccolours")
+    td_tags = tag.find_all('td')
+    td_tags = td_tags[2:]
+    dic = {}
+    for i in range(len(td_tags) - 1):
+        if(i % 2 == 0):
+            year = td_tags[i+1].text.rstrip()
+            dic[td_tags[i].text] = year
+    return dic
 
 
 
@@ -38,7 +45,9 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(getLink(self.soup), 'https://en.wikipedia.org/wiki/List_of_American_universities_with_Olympic_medals')
 
     def test_admissions_info(self):
-        self.assertEqual(getAdmissionsInfo2019(self.soup), {'Engineering': '1854', 
+        self.assertEqual(getAdmissionsInfo2019(self.soup), {'Literature, Science, andthe Arts': '1841',
+                                                            'Medicine': '1850', 
+                                                            'Engineering': '1854', 
                                                             'Law': '1859',
                                                             'Dentistry': '1875', 
                                                             'Pharmacy': '1876', 
@@ -46,8 +55,9 @@ class TestAllMethods(unittest.TestCase):
                                                             'Nursing': '1893', 
                                                             'Architecture &Urban Planning': '1906', 
                                                             'Graduate Studies': '1912', 
-                                                            'Government': '1914', 'Education': 
-                                                            '1921', 'Business': '1924', 
+                                                            'Government': '1914', 
+                                                            'Education': '1921',
+                                                            'Business': '1924', 
                                                             'Environment andSustainability': '1927', 
                                                             'Public Health': '1941', 
                                                             'Social Work': '1951', 
